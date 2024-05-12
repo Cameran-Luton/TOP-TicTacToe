@@ -13,7 +13,6 @@ function createGameboard() {
     };
 
     this.setcell = function setcell(x, y, player) {
-        console.log(`${x} ${y} ${player}`);
         this.board[x][y] = player;
     };
 
@@ -36,7 +35,7 @@ function createGameboard() {
                     this.board[i][0] == this.board[i][1] &&
                     this.board[i][1] == this.board[i][2]
                 ) {
-                    return "win " + this.board[i][1];
+                    return this.board[i][1];
                 }
             }
             if (
@@ -48,7 +47,7 @@ function createGameboard() {
                     this.board[0][i] == this.board[1][i] &&
                     this.board[1][i] == this.board[2][i]
                 ) {
-                    return "win " + this.board[1][i];
+                    return this.board[1][i];
                 }
             }
         }
@@ -67,13 +66,11 @@ function createGameboard() {
                 (this.board[0][2] == this.board[1][1] &&
                     this.board[1][1] == this.board[2][0])
             ) {
-                return "win " + this.board[1][1];
+                return this.board[1][1];
             }
         }
         if (nullSpaces === 0) {
             return "draw";
-        } else {
-            return "play";
         }
     };
 
@@ -89,6 +86,7 @@ function player(name, symbol) {
 }
 
 const gameController = {
+    activePlayer: "playerOne",
     gameboard: new createGameboard(),
     playerOne: null,
     playerTwo: null,
@@ -98,48 +96,65 @@ const gameController = {
     createPlayerTwo: function playerOne(name) {
         this.playerTwo = new player(name, "O");
     },
+    returnActivePlayer: function () {
+        if (this.activePlayer === "playerOne") {
+            this.activePlayer = "playerTwo";
+            return this.playerOne;
+        }
+        if (this.activePlayer === "playerTwo") {
+            this.activePlayer = "playerOne";
+            return this.playerTwo;
+        }
+    },
 };
-// gameController.gameboard.setUpBoard();
-gameController.createPlayerOne("test", "x");
-gameController.createPlayerTwo("test2", "O");
-gameController.gameboard.setcell(1, 1, gameController.playerOne.symbol);
-gameController.gameboard.setcell(0, 1, gameController.playerTwo.symbol);
-console.log(gameController);
 
 function drawGrid(gridArray) {
+    const title = document.querySelector(".activePlayer");
     const grid = document.querySelector(".game");
-
-    // gridArray.forEach((elementX) => {
-    //     elementX.forEach((elementY) => {
-    //         const btn = document.createElement("button");
-    //         console.log("add card");
-    //         btn.classList.add("cardBtn");
-    //         btn.onclick = () => {
-    //             console.log("clicked");
-    //         };
-    //         btn.textContent = elementY;
-    //         grid.appendChild(btn);
-    //     });
-    // });
+    title.textContent = `${gameController.returnActivePlayer().name}'s Turn`;
     grid.querySelectorAll("*").forEach((n) => n.remove());
-
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
+    gridArray.forEach((elementX, i) => {
+        elementX.forEach((elementY, j) => {
             const btn = document.createElement("button");
-            console.log("add card");
             btn.classList.add("cardBtn");
             btn.onclick = () => {
-                gameController.gameboard.setcell(
-                    i,
-                    j,
-                    gameController.playerOne.symbol
-                );
-                console.log("clicked" + i + j);
-                drawGrid(gameController.gameboard.board);
+                if (btn.textContent === "") {
+                    title.textContent = title.textContent = `${
+                        gameController.returnActivePlayer().name
+                    }'s Turn`;
+                    gameController.gameboard.setcell(
+                        i,
+                        j,
+                        gameController.returnActivePlayer().symbol
+                    );
+
+                    drawGrid(gameController.gameboard.board);
+                    checkWin();
+                }
             };
-            btn.textContent = gridArray[i][j];
+            btn.textContent = elementY;
             grid.appendChild(btn);
-        }
+        });
+    });
+}
+
+function checkWin() {
+    if (
+        gameController.gameboard.checkGrid() === gameController.playerOne.symbol
+    ) {
+        console.log("playerOne Wins");
+    }
+    if (
+        gameController.gameboard.checkGrid() === gameController.playerTwo.symbol
+    ) {
+        console.log("playerTwo Wins");
+    }
+    if (gameController.gameboard.checkGrid() === "draw") {
+        console.log("Draw");
     }
 }
+gameController.createPlayerOne("Player One", "x");
+gameController.createPlayerTwo("Player Twos", "O");
+console.log(gameController);
+
 drawGrid(gameController.gameboard.board);
