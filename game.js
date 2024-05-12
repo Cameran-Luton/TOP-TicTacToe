@@ -13,6 +13,7 @@ function createGameboard() {
     };
 
     this.setcell = function setcell(x, y, player) {
+        console.log(`${x} ${y} ${player}`);
         this.board[x][y] = player;
     };
 
@@ -95,11 +96,50 @@ const gameController = {
         this.playerOne = new player(name, "X");
     },
     createPlayerTwo: function playerOne(name) {
-        this.playerOne = new player(name, "O");
+        this.playerTwo = new player(name, "O");
     },
 };
 // gameController.gameboard.setUpBoard();
 gameController.createPlayerOne("test", "x");
 gameController.createPlayerTwo("test2", "O");
 gameController.gameboard.setcell(1, 1, gameController.playerOne.symbol);
+gameController.gameboard.setcell(0, 1, gameController.playerTwo.symbol);
 console.log(gameController);
+
+function drawGrid(gridArray) {
+    const grid = document.querySelector(".game");
+
+    // gridArray.forEach((elementX) => {
+    //     elementX.forEach((elementY) => {
+    //         const btn = document.createElement("button");
+    //         console.log("add card");
+    //         btn.classList.add("cardBtn");
+    //         btn.onclick = () => {
+    //             console.log("clicked");
+    //         };
+    //         btn.textContent = elementY;
+    //         grid.appendChild(btn);
+    //     });
+    // });
+    grid.querySelectorAll("*").forEach((n) => n.remove());
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const btn = document.createElement("button");
+            console.log("add card");
+            btn.classList.add("cardBtn");
+            btn.onclick = () => {
+                gameController.gameboard.setcell(
+                    i,
+                    j,
+                    gameController.playerOne.symbol
+                );
+                console.log("clicked" + i + j);
+                drawGrid(gameController.gameboard.board);
+            };
+            btn.textContent = gridArray[i][j];
+            grid.appendChild(btn);
+        }
+    }
+}
+drawGrid(gameController.gameboard.board);
