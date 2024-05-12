@@ -106,6 +106,10 @@ const gameController = {
             return this.playerTwo;
         }
     },
+    resetGame: function () {
+        this.activePlayer = "playerOne";
+        this.gameboard = new createGameboard();
+    },
 };
 
 function drawGrid(gridArray) {
@@ -143,16 +147,23 @@ function checkWin() {
         gameController.gameboard.checkGrid() === gameController.playerOne.symbol
     ) {
         console.log("playerOne Wins");
+        gameController.resetGame();
+        drawGrid(gameController.gameboard.board);
     }
     if (
         gameController.gameboard.checkGrid() === gameController.playerTwo.symbol
     ) {
         console.log("playerTwo Wins");
+        gameController.resetGame();
+        drawGrid(gameController.gameboard.board);
     }
     if (gameController.gameboard.checkGrid() === "draw") {
         console.log("Draw");
+        gameController.resetGame();
+        drawGrid(gameController.gameboard.board);
     }
 }
+
 gameController.createPlayerOne("Player One", "x");
 gameController.createPlayerTwo("Player Twos", "O");
 console.log(gameController);
