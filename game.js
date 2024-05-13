@@ -147,21 +147,54 @@ function checkWin() {
         gameController.gameboard.checkGrid() === gameController.playerOne.symbol
     ) {
         console.log("playerOne Wins");
-        gameController.resetGame();
-        drawGrid(gameController.gameboard.board);
+        endGame("win", gameController.playerOne.name);
+        // gameController.resetGame();
+        // drawGrid(gameController.gameboard.board);
     }
     if (
         gameController.gameboard.checkGrid() === gameController.playerTwo.symbol
     ) {
         console.log("playerTwo Wins");
-        gameController.resetGame();
-        drawGrid(gameController.gameboard.board);
+        endGame("win", gameController.playerTwo.name);
+        // gameController.resetGame();
+        // drawGrid(gameController.gameboard.board);
     }
     if (gameController.gameboard.checkGrid() === "draw") {
         console.log("Draw");
+        endGame("draw", "none");
+        // gameController.resetGame();
+        // drawGrid(gameController.gameboard.board);
+    }
+}
+
+function startGame() {}
+
+function endGame(status, winner) {
+    const body = document.querySelector(".body");
+    const popUp = document.createElement("div");
+    const msg = document.createElement("div");
+    const winMsg = document.createElement("h2");
+    const reset = document.createElement("button");
+    popUp.classList.add("popUp");
+    msg.classList.add("msg");
+    winMsg.classList.add("winMsg");
+    reset.classList.add("resetBtn");
+    reset.textContent = "Another Round";
+    reset.onclick = () => {
         gameController.resetGame();
         drawGrid(gameController.gameboard.board);
+        body.removeChild(popUp);
+    };
+    if (status === "win") {
+        winMsg.textContent = `${winner} Won`;
     }
+    if (status === "Draw") {
+        winMsg.textContent = `Its a draw`;
+    }
+    body.appendChild(popUp);
+    popUp.appendChild(msg);
+    msg.appendChild(winMsg);
+    msg.appendChild(reset);
 }
 
 gameController.createPlayerOne("Player One", "x");

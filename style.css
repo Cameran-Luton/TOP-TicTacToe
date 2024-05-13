@@ -40,3 +40,25 @@
 .activePlayer {
     margin: 20px;
 }
+
+.popUp {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.msg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    border: solid black 2px;
+    width: 50vw;
+    height: 50vh;
+}
